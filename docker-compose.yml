@@ -1,0 +1,26 @@
+version: "3.9"  # Cambié a 3.9, la versión más reciente compatible
+
+services:
+  app:
+    build:
+      context: app
+    expose:
+      - "5000"  # Exponiendo el puerto 5000 dentro de la red de Docker
+    networks:
+      - app_net
+    scale: 3  # Asegúrate de que haya 3 instancias
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Enlaza el archivo de configuración de Nginx
+    depends_on:
+      - app
+    ports:
+      - "80:80"  # Expone el puerto 80 al exterior
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    driver: bridge
